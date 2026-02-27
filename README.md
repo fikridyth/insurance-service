@@ -1,46 +1,33 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-🚀 Installation Guide
+# 🚀 Installation Guide
 
 Follow these steps to set up and run the Insurance Service API on your local environment:
 
-1️⃣ Clone the repository
-git clone https://github.com/fikridyth/insurance-service.git
-cd insurance-service
-2️⃣ Install dependencies
-composer install
+## 1️⃣ Clone the repository<br>
+`git clone https://github.com/fikridyth/insurance-service.git`<br>
+`cd insurance-service`
 
-Install Laravel Sanctum (if not installed automatically):
+## 2️⃣ Install dependencies<br>
+`composer install`
 
-composer require laravel/sanctum
-3️⃣ Setup environment configuration
+## 3️⃣ Setup environment configuration<br>
+Copy the environment file:<br>
+`cp .env.example .env`
 
-Copy the environment file:
+Generate the application key:<br>
+`php artisan key:generate`
 
-cp .env.example .env
+## 4️⃣ Run database migration and seeder<br>
+`php artisan migrate:fresh --seed`
 
-Generate the application key:
-
-php artisan key:generate
-
-Configure your database in the .env file:
-
-DB_DATABASE=your_database_name
-DB_USERNAME=your_database_user
-DB_PASSWORD=your_database_password
-4️⃣ Run database migration and seeder
-php artisan migrate:fresh --seed
-
-This will create all tables and populate initial data.
-
-5️⃣ Start the development server
-php artisan serve
+## 5️⃣ Start the development server<br>
+`php artisan serve`
 
 The application will be available at:
-
 http://127.0.0.1:8000
-✅ You're ready to go!
 
+## ✅ You're ready to go!<br>
 Your Insurance Service API is now running locally.
 
 ## About Laravel
