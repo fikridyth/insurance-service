@@ -13,15 +13,17 @@ class ClaimRepository implements ClaimRepositoryInterface
     {
         return new Claim(
             $model->id,
+            $model->claim_number,
             $model->user_id,
-            $model->policy_number,
-            $model->claim_amount,
+            $model->title,
             $model->description,
+            $model->amount,
             $model->status,
             $model->verified_by,
+            $model->verified_at,
             $model->approved_by,
-            $model->rejection_reason,
-            $model->created_at
+            $model->approved_at,
+            $model->rejection_reason
         );
     }
 
@@ -45,48 +47,52 @@ class ClaimRepository implements ClaimRepositoryInterface
     public function create(array $data)
     {
         $data['claim_number'] = 'CLM-' . Str::uuid();
-        $model = ClaimModel::create($data);
 
-        return $this->toEntity($model);
+        return ClaimModel::create($data);
+    }
+    
+    public function find(int $id)
+    {
+        return ClaimModel::findOrFail($id);
     }
 
     public function verify(int $id, int $verifierId)
     {
-        $model = $this->find($id);
+        $claim = $this->find($id);
 
-        $model->update([
+        $claim->update([
             'status' => 'verified',
             'verified_by' => $verifierId,
             'verified_at' => now(),
         ]);
 
-        return $this->toEntity($model);
+        return $claim;
     }
 
     public function approve(int $id, int $approverId)
     {
-        $model = $this->find($id);
+        $claim = $this->find($id);
 
-        $model->update([
+        $claim->update([
             'status' => 'approved',
             'approved_by' => $approverId,
             'approved_at' => now(),
         ]);
 
-        return $this->toEntity($model);
+        return $claim;
     }
 
     public function reject(int $id, int $approverId, string $reason)
     {
-        $model = $this->find($id);
+        $claim = $this->find($id);
 
-        $model->update([
+        $claim->update([
             'status' => 'rejected',
             'approved_by' => $approverId,
             'approved_at' => now(),
             'rejection_reason' => $reason
         ]);
 
-        return $this->toEntity($model);
+        return $claim;
     }
 }

@@ -9,6 +9,9 @@ use App\Application\Claim\UseCases\ApproveClaimUseCase;
 use App\Application\Claim\UseCases\GetAllClaimsByUserIdUseCase;
 use App\Application\Claim\UseCases\GetAllClaimsUseCase;
 use App\Application\Claim\UseCases\RejectClaimUseCase;
+use App\Shared\Responses\ActionResult;
+use App\Shared\Responses\Response;
+use Illuminate\Validation\ValidationException;
 
 class ClaimController
 {
@@ -23,49 +26,125 @@ class ClaimController
 
     public function index(Request $request)
     {
-        $user = $request->user();
-        if ($user->role === 'user') {
-            $claims = $this->getAllByUserIdUseCase->execute($user->id);
-        } else {
-            $claims = $this->getAllUseCase->execute();
-        }
+        try {
+            $user = $request->user();
+            if ($user->role === 'user') {
+                $claims = $this->getAllByUserIdUseCase->execute($user->id);
+            } else {
+                $claims = $this->getAllUseCase->execute();
+            }
 
-        return response()->json([
-            "success" => true,
-            "data" => $claims
-        ]);
+            return response()->json(
+                Response::successRecords(
+                    "Get Data success",
+                    $claims
+                ),
+                200
+            );
+        } catch (\Exception $e) {
+    
+            return response()->json(
+                Response::error(
+                    $e->getMessage(),
+                    400
+                ),
+                400
+            );
+    
+        }
     }
 
     public function store(Request $request)
     {
-        $claim = $this->createUseCase->execute([
-            'user_id' => auth()->id(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'amount' => $request->amount,
-        ]);
-
-        return response()->json($claim);
+        try {
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'amount' => 'required|numeric|min:0'
+            ]);
+    
+            $this->createUseCase->execute([
+                'user_id' => auth()->id(),
+                'title' => $request->title,
+                'description' => $request->description,
+                'amount' => $request->amount,
+            ]);
+    
+            return response()->json(
+                ActionResult::success(
+                    "Claim created successfully"
+                )->toArray(),
+                201
+            );
+        } catch (ValidationException $e) {
+            return response()->json(
+                ActionResult::error(
+                    "Validation failed",
+                    array_values($e->errors())
+                )->toArray(),
+                422
+            );
+        } catch (\Throwable $e) {
+            return response()->json(
+                ActionResult::exception($e)->toArray(),
+                400
+            );
+        }
     }
 
     public function verify($id)
     {
-        $claim = $this->verifyUseCase->execute($id, auth()->id());
-
-        return response()->json($claim);
+        try {
+            $this->verifyUseCase->execute($id, auth()->id());
+    
+            return response()->json(
+                ActionResult::success("Claim verified successfully")->toArray()
+            );
+        } catch (\Throwable $e) {
+            return response()->json(
+                ActionResult::exception($e)->toArray(),
+                400
+            );
+        }
     }
 
     public function approve($id)
     {
-        $claim = $this->approveUseCase->execute($id, auth()->id());
-
-        return response()->json($claim);
+        try {
+            $this->approveUseCase->execute($id, auth()->id());
+    
+            return response()->json(
+                ActionResult::success("Claim approved successfully")->toArray()
+            );
+        } catch (\Throwable $e) {
+            return response()->json(
+                ActionResult::exception($e)->toArray(),
+                400
+            );
+        }
     }
 
     public function reject(Request $request, $id)
     {
-        $claim = $this->rejectUseCase->execute($id, auth()->id(), $request->reason);
-
-        return response()->json($claim);
+        try {
+            $request->validate([
+                'reason' => 'required|string|max:500'
+            ]);
+    
+            $this->rejectUseCase->execute(
+                $id,
+                auth()->id(),
+                $request->reason
+            );
+    
+            return response()->json(
+                ActionResult::success("Claim rejected successfully")->toArray()
+            );
+        } catch (\Throwable $e) {
+            return response()->json(
+                ActionResult::exception($e)->toArray(),
+                400
+            );
+        }
     }
 }

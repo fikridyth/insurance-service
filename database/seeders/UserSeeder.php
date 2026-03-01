@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Admin Verifier',
-                'email' => 'verifier@mail.com',
+                'email' => 'verifier@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => 'verifier',
                 'email_verified_at' => Carbon::now(),
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Admin Approver',
-                'email' => 'approver@mail.com',
+                'email' => 'approver@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => 'approver',
                 'email_verified_at' => Carbon::now(),
