@@ -27,10 +27,12 @@ Generate the application key:<br>
 The application will be available at:
 http://127.0.0.1:8000
 
+Link to Postman : https://web.postman.co/workspace/My-Workspace~db5982fd-611b-4bef-8647-fa0ba1a8ff2b/folder/23140420-c427d1ed-31f5-452d-9f40-b35285f607ce?action=share&source=copy-link&creator=23140420&ctx=documentation
+
 ## ✅ You're ready to go!<br>
 Your Insurance Service API is now running locally.
 
-##
+## 
 
 ## About Laravel
 
