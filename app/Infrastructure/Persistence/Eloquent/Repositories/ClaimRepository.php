@@ -24,7 +24,9 @@ class ClaimRepository implements ClaimRepositoryInterface
             $model->verified_at,
             $model->approved_by,
             $model->approved_at,
-            $model->rejection_reason
+            $model->rejection_reason,
+            $model->created_at,
+            $model->updated_at
         );
     }
 

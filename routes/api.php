@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post("/logout", [AuthController::class,"logout"]);
-    Route::get('/claims', [ClaimController::class, 'index']);
+    Route::get('/claims/get-list', [ClaimController::class, 'index']);
     Route::post('/claims/store', [ClaimController::class, 'store'])->middleware('role:user');
     Route::post('/claims/{id}/verify', [ClaimController::class, 'verify'])->middleware('role:verifier');
     Route::post('/claims/{id}/approve', [ClaimController::class, 'approve'])->middleware('role:approver');

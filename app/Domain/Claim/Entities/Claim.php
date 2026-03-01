@@ -13,9 +13,11 @@ class Claim
         public float $Amount,
         public string $Status,
         public ?int $VerifiedBy,
-        public ?date $VerifiedAt,
+        public ?string $VerifiedAt,
         public ?int $ApprovedBy,
-        public ?date $ApprovedAt,
+        public ?string $ApprovedAt,
         public ?string $RejectionReason,
+        public string $CreatedAt,
+        public string $UpdatedAt,
     ) {}
 }
