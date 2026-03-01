@@ -5,6 +5,7 @@ namespace App\Interfaces\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Application\Auth\UseCases\LoginUseCase;
 use App\Application\Auth\UseCases\LogoutUseCase;
+use App\Shared\Responses\Response;
 
 class AuthController
 {
@@ -21,17 +22,23 @@ class AuthController
                 $request->password
             );
     
-            return response()->json([
-                "success" => true,
-                "data" => $result
-            ]);
+            return response()->json(
+                Response::successRecord(
+                    "Login success",
+                    $result
+                ),
+                200
+            );
     
         } catch (\Exception $e) {
     
-            return response()->json([
-                "success" => false,
-                "message" => $e->getMessage()
-            ], 400);
+            return response()->json(
+                Response::error(
+                    $e->getMessage(),
+                    400
+                ),
+                400
+            );
     
         }
     }

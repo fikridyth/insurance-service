@@ -6,16 +6,35 @@ use Illuminate\Http\Request;
 use App\Application\Claim\UseCases\CreateClaimUseCase;
 use App\Application\Claim\UseCases\VerifyClaimUseCase;
 use App\Application\Claim\UseCases\ApproveClaimUseCase;
+use App\Application\Claim\UseCases\GetAllClaimsByUserIdUseCase;
+use App\Application\Claim\UseCases\GetAllClaimsUseCase;
 use App\Application\Claim\UseCases\RejectClaimUseCase;
 
 class ClaimController
 {
     public function __construct(
+        private GetAllClaimsUseCase $getAllUseCase,
+        private GetAllClaimsByUserIdUseCase $getAllByUserIdUseCase,
         private CreateClaimUseCase $createUseCase,
         private VerifyClaimUseCase $verifyUseCase,
         private ApproveClaimUseCase $approveUseCase,
         private RejectClaimUseCase $rejectUseCase,
     ) {}
+
+    public function index(Request $request)
+    {
+        $user = $request->user();
+        if ($user->role === 'user') {
+            $claims = $this->getAllByUserIdUseCase->execute($user->id);
+        } else {
+            $claims = $this->getAllUseCase->execute();
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => $claims
+        ]);
+    }
 
     public function store(Request $request)
     {
