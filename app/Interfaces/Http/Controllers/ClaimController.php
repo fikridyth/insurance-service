@@ -76,15 +76,16 @@ class ClaimController
     
             return response()->json(
                 ActionResult::success(
-                    "Claim created successfully"
+                    "Success",
+                    "Data Claim Created Successfully"
                 )->toArray(),
                 201
             );
         } catch (ValidationException $e) {
             return response()->json(
                 ActionResult::error(
-                    "Validation failed",
-                    array_values($e->errors())
+                    "Failed",
+                    $e->getMessage()
                 )->toArray(),
                 422
             );
@@ -102,7 +103,11 @@ class ClaimController
             $this->verifyUseCase->execute($id, auth()->id());
     
             return response()->json(
-                ActionResult::success("Claim verified successfully")->toArray()
+                ActionResult::success(
+                    "Success",
+                    "Verify Claim Successfully"
+                )->toArray(),
+                201
             );
         } catch (\Throwable $e) {
             return response()->json(
@@ -118,7 +123,11 @@ class ClaimController
             $this->approveUseCase->execute($id, auth()->id());
     
             return response()->json(
-                ActionResult::success("Claim approved successfully")->toArray()
+                ActionResult::success(
+                    "Success",
+                    "Approve Claim Successfully"
+                )->toArray(),
+                201
             );
         } catch (\Throwable $e) {
             return response()->json(
@@ -142,7 +151,11 @@ class ClaimController
             );
     
             return response()->json(
-                ActionResult::success("Claim rejected successfully")->toArray()
+                ActionResult::success(
+                    "Success",
+                    "Reject Claim Successfully"
+                )->toArray(),
+                201
             );
         } catch (\Throwable $e) {
             return response()->json(

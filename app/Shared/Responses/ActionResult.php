@@ -5,17 +5,17 @@ namespace App\Shared\Responses;
 class ActionResult
 {
     public function __construct(
-        public ?string $status,
+        public ?bool $status,
         public ?string $title,
-        public ?array $description = []
+        public ?string $description
     ) {}
 
     public static function success(
         string $title = "Success",
-        array $description = []
+        string $description = ""
     ): self {
         return new self(
-            "Success",
+            true,
             $title,
             $description
         );
@@ -23,10 +23,10 @@ class ActionResult
 
     public static function error(
         string $title = "Error",
-        array $description = []
+        string $description = ""
     ): self {
         return new self(
-            "Error",
+            false,
             $title,
             $description
         );
@@ -35,9 +35,9 @@ class ActionResult
     public static function exception(\Throwable $e): self
     {
         return new self(
-            "Error",
+            false,
             $e->getMessage(),
-            []
+            "Error Server"
         );
     }
 
