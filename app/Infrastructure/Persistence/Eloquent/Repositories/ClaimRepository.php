@@ -7,6 +7,7 @@ use App\Domain\Claim\Repositories\ClaimRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\ClaimModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ClaimRepository implements ClaimRepositoryInterface
 {
@@ -16,13 +17,16 @@ class ClaimRepository implements ClaimRepositoryInterface
             $model->id,
             $model->claim_number,
             $model->user_id,
+            $model->user?->name,
             $model->title,
             $model->description,
             $model->amount,
             $model->status,
             $model->verified_by,
+            $model->verifier?->name,
             $model->verified_at,
             $model->approved_by,
+            $model->approver?->name,
             $model->approved_at,
             $model->rejection_reason,
             $model->created_at,
@@ -49,14 +53,20 @@ class ClaimRepository implements ClaimRepositoryInterface
 
     public function getAll(int $page, int $limit): array
     {
-        $query = ClaimModel::latest();
+        $user = Auth::user();
+        $query = ClaimModel::with('user', 'verifier', 'approver')->latest();
+        if ($user->role === 'verifier') {
+            $query->where('status', 'submitted');
+        } else {
+            $query->where('status', 'verified');
+        }
 
         return $this->paginateQuery($query, $page, $limit);
     }
 
     public function getByUserId(int $userId, int $page, int $limit): array
     {
-        $query = ClaimModel::where('user_id', $userId)->latest();
+        $query = ClaimModel::with('user', 'verifier', 'approver')->where('user_id', $userId)->latest();
 
         return $this->paginateQuery($query, $page, $limit);
     }
