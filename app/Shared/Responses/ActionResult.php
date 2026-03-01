@@ -44,9 +44,9 @@ class ActionResult
     public function toArray(): array
     {
         return [
-            "status" => $this->status,
-            "title" => $this->title,
-            "description" => $this->description
+            "Status" => $this->status,
+            "Title" => $this->title,
+            "Description" => $this->description
         ];
     }
 }

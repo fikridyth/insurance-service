@@ -25,6 +25,15 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'name' => 'Hidayat',
+                'email' => 'hidayat@gmail.com',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'email_verified_at' => Carbon::now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'Admin Verifier',
                 'email' => 'verifier@gmail.com',
                 'password' => Hash::make('password'),

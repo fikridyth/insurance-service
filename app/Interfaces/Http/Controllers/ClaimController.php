@@ -28,16 +28,20 @@ class ClaimController
     {
         try {
             $user = $request->user();
+            $page = (int) $request->query("page", 1);
+            $limit = 10;
             if ($user->role === 'user') {
-                $claims = $this->getAllByUserIdUseCase->execute($user->id);
+                $result = $this->getAllByUserIdUseCase->execute($user->id, $page, $limit);
             } else {
-                $claims = $this->getAllUseCase->execute();
+                $result = $this->getAllUseCase->execute($page, $limit);
             }
 
             return response()->json(
                 Response::successRecords(
                     "Get Data success",
-                    $claims
+                    $result->getRecords(),
+                    200,
+                    $result->getPagination()
                 ),
                 200
             );

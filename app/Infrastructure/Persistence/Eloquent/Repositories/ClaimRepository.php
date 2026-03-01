@@ -6,6 +6,7 @@ use App\Domain\Claim\Entities\Claim;
 use App\Domain\Claim\Repositories\ClaimRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\ClaimModel;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class ClaimRepository implements ClaimRepositoryInterface
 {
@@ -27,21 +28,35 @@ class ClaimRepository implements ClaimRepositoryInterface
         );
     }
 
-    public function getAll(): array
+    private function paginateQuery(Builder $query, int $page, int $limit): array
     {
-        return ClaimModel::latest()
+        $total = $query->count();
+
+        $records = $query
+            ->offset(($page - 1) * $limit)
+            ->limit($limit)
             ->get()
             ->map(fn($model) => $this->toEntity($model))
             ->toArray();
+
+        return [
+            "data" => $records,
+            "total" => $total
+        ];
     }
 
-    public function getByUserId(int $userId): array
+    public function getAll(int $page, int $limit): array
     {
-        return ClaimModel::where('user_id', $userId)
-            ->latest()
-            ->get()
-            ->map(fn($model) => $this->toEntity($model))
-            ->toArray();
+        $query = ClaimModel::latest();
+
+        return $this->paginateQuery($query, $page, $limit);
+    }
+
+    public function getByUserId(int $userId, int $page, int $limit): array
+    {
+        $query = ClaimModel::where('user_id', $userId)->latest();
+
+        return $this->paginateQuery($query, $page, $limit);
     }
 
     public function create(array $data)

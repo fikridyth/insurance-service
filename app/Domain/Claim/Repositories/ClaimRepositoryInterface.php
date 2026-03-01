@@ -4,8 +4,8 @@ namespace App\Domain\Claim\Repositories;
 
 interface ClaimRepositoryInterface
 {
-    public function getAll(): array;
-    public function getByUserId(int $userId): array;
+    public function getAll(int $page, int $limit): array;
+    public function getByUserId(int $userId, int $page, int $limit): array;
     public function create(array $data);
     public function find(int $id);
     public function verify(int $id, int $verifierId);

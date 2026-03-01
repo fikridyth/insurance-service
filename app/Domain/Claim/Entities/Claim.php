@@ -5,17 +5,17 @@ namespace App\Domain\Claim\Entities;
 class Claim
 {
     public function __construct(
-        public ?int $id,
-        public string $claimNumber,
-        public int $userId,
-        public string $title,
-        public string $description,
-        public float $amount,
-        public string $status,
-        public ?int $verifiedBy,
-        public ?date $verifiedAt,
-        public ?int $approvedBy,
-        public ?date $approvedAt,
-        public ?string $rejectionReason,
+        public ?int $Id,
+        public string $ClaimNumber,
+        public int $UserId,
+        public string $Title,
+        public string $Description,
+        public float $Amount,
+        public string $Status,
+        public ?int $VerifiedBy,
+        public ?date $VerifiedAt,
+        public ?int $ApprovedBy,
+        public ?date $ApprovedAt,
+        public ?string $RejectionReason,
     ) {}
 }
